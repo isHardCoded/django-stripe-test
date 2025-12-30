@@ -4,6 +4,14 @@ from django.conf import settings
 from .models import Item, Order
 from .stripe_client import init_stripe
 
+def item_list(request):
+    items = Item.objects.all()
+    return render(request, "store/item_list.html", {"items": items})
+
+def order_list(request):
+    orders = Order.objects.all()
+    return render(request, "store/order_list.html", {"orders": orders})
+
 def buy_item(request, id):
     item = get_object_or_404(Item, id=id)
     stripe = init_stripe(item.currency)

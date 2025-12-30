@@ -1,31 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ item.name }}</title>
-    <script src="https://js.stripe.com/v3/"></script>
-    <style>
-        #card-element {
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 4px;
-            max-width: 400px;
-        }
-        #card-errors {
-            color: red;
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
-    <h1>{{ item.name }}</h1>
-    <p>{{ item.description }}</p>
-    <p>Price: {{ item.price }} cents</p>
+{% extends "store/base.html" %}
 
-    <form id="payment-form">
-        <div id="card-element"></div>
-        <div id="card-errors" role="alert"></div>
-        <button type="submit">Buy</button>
-    </form>
+{% block title %}{{ item.name }}{% endblock %}
+
+{% block content %}
+    <div class="border p-3 rounded-md mx-auto flex flex-col">
+        <h1 class="text-3xl font-bold mb-4">{{ item.name }}</h1>
+        <p class="mb-2">{{ item.description }}</p>
+        <p class="mb-4 font-semibold">Цена: {{ item.price }} {{ item.currency|upper }}</p>
+
+        <form id="payment-form" class="space-y-4">
+            <div id="card-element" class="p-4 border rounded max-w-md bg-white"></div>
+            <div id="card-errors" role="alert" class="text-red-600"></div>
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Купить</button>
+        </form>
+    </div>
 
     <script>
         const stripe = Stripe("{{ stripe_public_key }}");
@@ -42,9 +30,7 @@
             const clientSecret = data.client_secret;
 
             const {error, paymentIntent} = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: card
-                }
+                payment_method: { card: card }
             });
 
             if (error) {
@@ -54,5 +40,4 @@
             }
         });
     </script>
-</body>
-</html>
+{% endblock %}

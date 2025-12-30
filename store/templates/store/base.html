@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Store{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body class="font-sans">
+    <header class="text-white border-b">
+        <div class="max-w-[1440px] mx-auto flex items-center gap-6 p-4">
+            <a href="{% url 'item-list' %}" class="text-black hover:underline font-semibold">Товары</a>
+            <a href="{% url 'order-list' %}" class="text-black hover:underline font-semibold">Мои заказы</a>
+        </div>
+    </header>
+
+    <main class="max-w-[1440px] mx-auto p-6">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
