@@ -14,7 +14,7 @@ def buy_item(request, id):
         payment_method_types=["card"],
         line_items=[{
             "price_data": {
-                "currency": "usd",
+                "currency": item.currency,
                 "product_data": {
                     "name": item.name,
                     "description": item.description,
@@ -47,7 +47,7 @@ def buy_order(request, id):
     line_items = [
         {
             "price_data": {
-                "currency": "usd",
+                "currency": item.currency,
                 "product_data": {
                     "name": item.name,
                     "description": item.description,

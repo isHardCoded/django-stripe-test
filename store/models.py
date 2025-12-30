@@ -3,8 +3,8 @@ from django.db import models
 class Item(models.Model):
     name = models.CharField(max_length=255, verbose_name="Name")
     description = models.TextField(blank=True, verbose_name="Description")
-    price = models.IntegerField(verbose_name="Price (cents)", help_text="Price in cents, e. g. 1000 = $10.00")
-
+    price = models.IntegerField(verbose_name="Price (cents)", help_text="Price in cents, e.g. 1000 = $10.00")
+    currency = models.CharField(max_length=3, default="usd", verbose_name="Currency")
     def __str__(self):
         return self.name
 
