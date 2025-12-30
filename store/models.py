@@ -8,9 +8,22 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
+class Discount(models.Model):
+    name = models.CharField(max_length=255)
+    amount = models.IntegerField(help_text="Discount in cents")
+
+class Tax(models.Model):
+    name = models.CharField(max_length=255)
+    percentage = models.FloatField(help_text="Tax percent, e.g. 5.5")
+
 class Order(models.Model):
-    items = models.ManyToManyField(Item, related_name="orders")
+    items = models.ManyToManyField(Item)
+    discounts = models.ManyToManyField(Discount, blank=True)
+    taxes = models.ManyToManyField(Tax, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def total_price(self):
         return sum(item.price for item in self.items.all())
+
+    def __str__(self):
+        return f"Order #{self.id}"
