@@ -1,3 +1,9 @@
 from django.db import models
 
-# Create your models here.
+class Item(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Name")
+    description = models.TextField(blank=True, verbose_name="Description")
+    price = models.IntegerField(verbose_name="Price (cents)", help_text="Price in cents, e. g. 1000 = $10.00")
+
+    def __str__(self):
+        return self.name
