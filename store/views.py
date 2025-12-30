@@ -10,25 +10,14 @@ stripe = init_stripe()
 def buy_item(request, id):
     item = get_object_or_404(Item, id=id)
 
-    session = stripe.checkout.Session.create(
+    intent = stripe.PaymentIntent.create(
+        amount=item.price,
+        currency=item.currency,
         payment_method_types=["card"],
-        line_items=[{
-            "price_data": {
-                "currency": item.currency,
-                "product_data": {
-                    "name": item.name,
-                    "description": item.description,
-                },
-                "unit_amount": item.price,
-            },
-            "quantity": 1,
-        }],
-        mode="payment",
-        success_url="http://localhost:8000/success/",
-        cancel_url="http://localhost:8000/cancel/",
+        description=f"Payment for {item.name}"
     )
 
-    return JsonResponse({"session_id": session.id})
+    return JsonResponse({"client_secret": intent.client_secret})
 
 def item_detail(request, id):
     item = get_object_or_404(Item, id=id)
@@ -43,27 +32,15 @@ def item_detail(request, id):
 
 def buy_order(request, id):
     order = get_object_or_404(Order, id=id)
-    
-    line_items = [
-        {
-            "price_data": {
-                "currency": item.currency,
-                "product_data": {
-                    "name": item.name,
-                    "description": item.description,
-                },
-                "unit_amount": item.price,
-            },
-            "quantity": 1,
-        } for item in order.items.all()
-    ]
 
-    session = stripe.checkout.Session.create(
+    currency = order.items.first().currency
+    amount = sum(item.price for item in order.items.all())
+
+    intent = stripe.PaymentIntent.create(
+        amount=amount,
+        currency=currency,
         payment_method_types=["card"],
-        line_items=line_items,
-        mode="payment",
-        success_url="http://localhost:8000/success/",
-        cancel_url="http://localhost:8000/cancel/",
+        description=f"Payment for Order #{order.id}"
     )
-    
-    return JsonResponse({"session_id": session.id})
+
+    return JsonResponse({"client_secret": intent.client_secret})
