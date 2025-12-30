@@ -7,3 +7,10 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
+
+class Order(models.Model):
+    items = models.ManyToManyField(Item, related_name="orders")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def total_price(self):
+        return sum(item.price for item in self.items.all())
