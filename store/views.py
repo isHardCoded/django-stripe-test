@@ -24,8 +24,8 @@ def buy_item(request, id):
             "quantity": 1,
         }],
         mode="payment",
-        success_url="http://localhost:8001/success/",
-        cancel_url="http://localhost:8001/cancel/",
+        success_url="http://localhost:8000/success/",
+        cancel_url="http://localhost:8000/cancel/",
     )
 
     return JsonResponse({"session_id": session.id})
